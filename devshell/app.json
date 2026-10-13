@@ -1,0 +1,29 @@
+{
+    "format": "cadcraft-devshell",
+    "version": 1,
+    "app": {
+        "slug": "detailcraft",
+        "name": "DetailCraft",
+        "layer": "violet",
+        "role": "Steel & rebar detailing",
+        "tagline": "Model it once. Every shop drawing follows.",
+        "short": "Structural steel members and connections, rebar placement and bending schedules, shop drawings and NC files from one model."
+    },
+    "others": {
+        "cadcraft": "CadCraft",
+        "bimcraft": "BimCraft",
+        "modelcraft": "ModelCraft",
+        "markupcraft": "MarkupCraft",
+        "takeoffcraft": "TakeoffCraft",
+        "civilcraft": "CivilCraft",
+        "partcraft": "PartCraft"
+    },
+    "vendor": {
+        "three": "0.186.1"
+    },
+    "origin": "https://getcadcraft.com",
+    "packed": {
+        "at": "2026-10-13T20:37:39Z",
+        "build": "0.4"
+    }
+}
