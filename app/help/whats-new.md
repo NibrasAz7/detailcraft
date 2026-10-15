@@ -1,80 +1,61 @@
 ---
-title: What's new in 0.4
-summary: Phases, stairs, splices, brace gussets and shear tabs, clash check, cut list, weight report, KISS export, drawing sizes, revisions and DWG sheets, window and lasso selection, move, rotate and mirror, and DetailCraft in your language.
+title: What's new in 0.5
+summary: A profile catalog of 1,259 sizes with S shapes, pipe and UPN channels, detailing one model together live in CadCraft Studio, menu styles with your own keys and mouse, Move on the M key, and a layout for phones.
 section: start
 order: 5
-keywords: whats new, what's new, release notes, changelog, changes, 0.4, version, new features, phases, stairs, splice, gusset, shear tab, clash, cut list, weight report, kiss, dwg, dxf, revision, lasso, touch, language, spanish, recover
+keywords: whats new, what's new, release notes, changelog, changes, 0.5, version, new features, profiles, catalog, sizes, s shapes, pipe, upn, live, together, studio, menu style, ribbon, drafting classic, steel ribbon, keys, mouse, move, phone, fold phone, tablet, settings
 ---
 
-This is what changed in DetailCraft 0.4, compared with 0.3, the version Try ran before. It is a big release: more connections, stairs and phases, new checks and reports, and drawings on more sheet sizes with revisions.
-
-:::warning
-DetailCraft 0.4 saves models in file format 2. DetailCraft 0.3 cannot open them. 0.4 opens your older models, with every part in phase 1.
-:::
+This is what changed in DetailCraft 0.5, compared with 0.4. Models still save in file format 2, so DetailCraft 0.4 and 0.5 open each other's files. A model that uses a size new in 0.5, such as an S shape, names a profile 0.4 does not have.
 
 ## New
 
-### Modeling
+### A much larger profile catalog
 
-- **Select with a window.** Drag in {{ui:Plan}} or {{ui:Elevation}}, or {{key:Shift}}+drag in {{ui:3D}}. Drag to the right to take what is wholly inside; drag to the left to take what the window touches. See [Select by window, move, rotate, mirror, change many](topic:select-and-change#select-with-a-window).
-- **Lasso.** In {{ui:Settings}}, on the {{ui:DetailCraft}} tab, set {{ui:Dragging to select}} to {{ui:Lasso}} to draw a freehand line instead. {{key:Space}} switches between inside, touching and fence while you drag. See [Lasso](topic:select-and-change#lasso).
-- **Move, rotate and mirror** a selection, or a copy of it: by a typed offset, by clicking two grid intersections ({{key:M}}), about a grid intersection, or in a grid line. Mirrored parts are true mirror images, holes and copes included.
-- **Drag parts.** Press on a selected part and drag it. It snaps onto grid intersections; {{key:Esc}} puts it back. See [Drag parts to move them](topic:select-and-change#drag-parts-to-move-them).
-- **Change many members at once.** Select several and change the profile, material, position or rotation in {{ui:Properties}}. Fields that differ say {{ui:Varies}}. See [Change a property on many members](topic:select-and-change#change-a-property-on-many-members).
-- **Phases.** Put members and footings in phases, show or hide each phase, and number marks per phase (2-b1, 2-B1). See [Phases](topic:phases).
-- **Stairs.** {{ui:Place}} › {{ui:Stair}} ({{key:S}}) places a straight steel stair: two stringers and tread plates, sized from the rise and checked against IBC 1011.5.2. See [Stairs](topic:stairs).
+- **From 45 to 1,259 sizes.** W, S, C, equal-leg angles, rectangular and square HSS, round HSS and pipe from the AISC shapes database, and IPE, HEA, HEB and UPN from EN 10365. See [Profile catalog](topic:profile-catalog).
+- **S shapes, pipe and UPN channels are new.** S shapes take holes, copes, end and base plates, NC files and shop drawings like the other I-shapes. UPN works like C channels, and pipe like round HSS.
+- **Older models build the same parts.** The 45 sizes of 0.4 come out exactly as before. A model with a custom profile named like a size that is now in the catalog still opens, and its own profile wins.
+- **KISS export** names S shapes `S` and UPN channels `C`. See [KISS export](topic:kiss-export).
 
-### Connections
+### Detail one model together, live
 
-- **Shear tabs** to a column flange or web, also for beams that meet the column at an angle in plan or slope: {{ui:Connect}} › {{ui:More}} › {{ui:Shear tabs}}. See [Shear tabs](topic:shear-tabs).
-- **End plates on a column web**, not only on a flange. See [End plates](topic:end-plates).
-- **Splices.** Bolted flange and web cover plates join two pieces of one I-shape, in a beam or a column: {{ui:Connect}} › {{ui:More}} › {{ui:Splice}}. See [Splices](topic:splices).
-- **Brace gussets.** Angle and flat-bar braces are bolted, tube braces are slotted and welded, and the brace is cut back clear of the joint: {{ui:Connect}} › {{ui:More}} › {{ui:Gusset}}. See [Brace gussets](topic:brace-gussets).
-- **Base details.** A base plate can have a grout gap, stiffeners, a shear lug and plate washers sized from AISC Design Guide 1. All are off until you set them. See [Base details](topic:base-plates#base-details-grout-stiffeners-shear-lug-washers).
+- **Several people in one model.** In a CadCraft Studio live session, members, connections, footings, stairs, bolts and issues merge item by item. Two people changing different settings of one member both keep theirs; the same setting goes to the later change.
+- **A connection on a member someone just deleted** is taken back, and the status bar says why.
+- **Undo undoes your own last edit** and leaves everyone else's alone.
+- Built parts, piece marks and the schedule are worked out in every window from the same model, so they agree. Only the host saves the model.
+- See [Detail one structure together, live](topic:work-live).
 
-### Checks and reports
+### Menus, keys and mouse
 
-- **Clash check.** The {{ui:Clashes}} tab at the bottom finds parts that run into each other, leaving out the parts a connection means to join. {{ui:Show}} goes to each clash. See [Check for clashes](topic:clash-check).
-- **Cut list.** The {{ui:Cut list}} tab nests beams, columns, braces and stair stringers into your stock lengths with saw kerf, and says how many bars to buy and the waste. See [Cut list](topic:cut-list).
-- **Weight report by phase.** Cut lengths, counts, weights, paint areas, bolts and rebar for each phase, as a table, CSV or PDF. See [Material and weight report by phase](topic:weight-report).
-- **KISS export.** {{ui:Output}} › {{ui:More}} › {{ui:KISS file for fabrication software}} writes the bill of materials as a KISS 1.1 file, phases as sequences. See [KISS export](topic:kiss-export).
+- **Three menu styles.** {{ui:DetailCraft}} (the toolbar you know), {{ui:Drafting classic}} (a small ribbon and a command line: type BEAM, COLUMN, PLATE, ENDPLATE and more, then press {{key:Enter}}) and {{ui:Steel ribbon}} (tabs for modeling, detailing, drawings and fabrication).
+- **Your own keys and mouse.** Give any command your own key, move commands between ribbon tabs, and set the wheel and the buttons that pan and orbit. See [Menus, keys and mouse](topic:menus-keys-and-mouse).
 
-### Drawings
+### Editing
 
-- **Sheet sizes.** Drawings and shop drawings come on A4, A3, A2, A1, ANSI B, ANSI C or ANSI D sheets. Bigger sheets draw at larger scales. See [Choose the sheet size](topic:drawings#choose-the-sheet-size).
-- **DWG and DXF sheets.** Download a sheet, or all of them, as DWG (2000 to 2018 formats) or DXF R12, full size, with a layer per pen. See [Download](topic:drawings#download).
-- **Issues and revisions.** Issue sheets with revision letters. Each sheet gets a revision table, and the {{ui:Drawings}} window says when a sheet needs a new issue. See [Issue drawings and revisions](topic:drawings#issue-drawings-and-revisions).
-- **Revision clouds.** From a sheet's second issue on, changed parts are clouded, with a revision triangle. See [Revision clouds](topic:drawings#revision-clouds).
-- **Anchor bolt plan.** When the model has base plates, the set has an anchor bolt sheet with rod and base plate schedules and a typical rod pattern.
-- **Weld symbols.** Assembly drawings show fillet weld symbols at every welded plate.
-- **Hidden lines.** Plans and elevations leave out what is behind other parts; assembly drawings draw it dashed. See [What is in the set](topic:drawings#what-is-in-the-set).
-
-### Your work and your language
-
-- **Recover your work.** While the model has unsaved changes, DetailCraft keeps a copy in this browser. After a crash or a closed tab, it asks **Recover your work?** next time. See [Recover unsaved work](common:recover).
-- **Recent models** are listed on the start screen in Chrome and Edge. Click one to open it again. See [Open, save and export files](topic:files#lost-work-recent-files-the-desktop-app).
-- **Language.** Every word on screen, in drawings and in reports comes from a language file. {{ui:Settings}} › {{ui:General}} › {{ui:Language}} offers {{ui:Español (México)}}: a machine-made draft that nobody has reviewed yet. Help topics are still in English.
-- **Find a tool.** Press {{key:Mod+K}}, or choose {{ui:Find}} in the bar at the top, and type a few letters to run a tool, open a setting or a help topic. See [Find a tool or setting](common:find-tools).
-- **Touch.** Tap to select or place, long press to add to the selection or take away, drag selected parts with one finger, pinch with two. See [Touch](topic:keyboard#touch).
-- **Open from BimCraft.** {{ui:Open in DetailCraft}} in BimCraft opens its IFC model here in a new tab, with nothing uploaded.
+- **Move on the M key.** {{ui:Edit}} › {{ui:More}} › {{ui:Move}} ({{key:M}}) moves the selection by two picked points, and like every command it can take another key in your own style. See [Select by window, move, rotate, mirror, change many](topic:select-and-change).
 
 ## Improved
 
-- **IFC import** brings in round holes, copes and bolts, not only members and plates. Bolts come in as loose bolts. See [Import](topic:ifc-export#import).
-- **IFC is read by cc-ifc**, our own IFC engine. DetailCraft no longer downloads a separate IFC reader, so saving it for offline use keeps about half as much.
-- **NC files** for channels, angles, and rectangular and round tubes, not only I-shapes and plates. See [Send NC files to the shop](topic:nc-export) and [NC file fields](topic:nc1-fields).
-- **Metric rebar.** BS 4449 bars H8 to H40, bent to BS 8666:2020. Bending schedules can use BS 8666 or ACI 315 shape codes, and ASTM bars can use their soft-metric names. See [Rebar reference](topic:rebar-reference) and [Rebar settings](topic:settings#rebar).
-- **More panels windows.** Each panel can have a window of its own, up to four, and you can drag a panel from one window to another. See [Arrange the panels](common:arrange-panels).
-- The view cube's words come from the language file too.
+- The help topics [Profile catalog](topic:profile-catalog), [Getting started with DetailCraft](topic:getting-started) and [Coming from other detailing software](topic:coming-from) describe the larger catalog. [Profile catalog](topic:profile-catalog) now says correctly that channels, HSS, pipe and angles get NC files.
+- The help on AI assistants no longer names particular assistant programs; any program that speaks MCP works, as before.
+- Messages from the DWG writer used for DWG sheets now come from the language file.
 
-## Fixed
+## In every app
 
-- A hole in a channel's web is now drawn on the web, in 3D and in drawings. It used to be drawn at the middle of the section.
+- **CadCraft Studio is the desktop app.** From 0.5 the desktop download is CadCraft Studio: all eight apps in one install. The separate installer for each app stops. DetailCraft still runs in the browser, and as a browser edition you can download.
+- **Installers are not signed yet.** Code signing comes with 0.6. On Windows, if SmartScreen stops the installer, choose {{ui:More info}}, then {{ui:Run anyway}}. The macOS disk image (Apple silicon and Intel, macOS 13 or later) is not signed or notarized: the first time, right-click the app and choose {{ui:Open}}. iPad, Android and iPhone come with 0.6.
+- **Work together live.** In CadCraft Studio, {{ui:Live}} shares the file you have open: teammates on the same network join with a short code and edit with you, each with their own undo. Sessions on your own network are free, for everyone. Invite links over the internet aren't open yet. See [Work together live](common:work-together-live) and [Detail one structure together, live](topic:work-live).
+- **Menus, keys and mouse.** In {{ui:Settings}} › {{ui:DetailCraft}} › {{ui:Menus, keys and mouse}}, pick a menu style ({{ui:DetailCraft}}, {{ui:Drafting classic}} or {{ui:Steel ribbon}}), give any command your own key, move commands between menus, set the wheel and the mouse buttons, and export or import a style as a `.ccinput.json` file. {{ui:Use this style in every app}} opens every app in its matching style. See [Menus, keys and mouse](topic:menus-keys-and-mouse).
+- **A wider Settings dialog,** in two columns, so more fits without scrolling. See [DetailCraft settings](topic:settings).
+- **Floating and bottom panels fit the window.** A floating panel stays above the status bar and is kept inside the window when it gets smaller, and a panel docked at the bottom never takes the whole drawing. See [Arrange the panels and use a second monitor](common:arrange-panels).
+- **Phones and fold phones.** On a screen up to 760 px wide, or a phone held sideways, the model keeps the screen: panels and the reports ({{ui:Problems}}, {{ui:Bill of materials}}, {{ui:Bending schedule}}) open as sheets from a bar at the bottom, and the toolbar is one row that scrolls sideways. {{ui:Tools}} hides the toolbar and {{ui:Move}} puts it at the bottom. Turning the phone, or opening and closing a fold phone, keeps your work, the selection and an open dialog. The app bar's {{ui:More}} menu holds the version, Find and the links. Phones work, but DetailCraft is made for larger screens.
+- **Touch tablets.** On a touch screen each toolbar is one row that scrolls sideways instead of wrapping onto several lines.
+- **Spanish** stays a machine-made draft that has not been reviewed yet. Help topics are in English.
 
 ## Not in this version yet
 
-- **AI assistants.** {{ui:Settings}} has an {{ui:Assistants}} switch, but an assistant can only connect through CadCraft Studio on your computer, and Studio is not available yet. See [Use DetailCraft with an AI assistant](topic:use-with-ai-assistants).
-- Cloud saving and the desktop app are not available yet.
-- Shop drawings of channels, angles and tubes; weld symbols other than fillets; portrait sheets and A0.
-- Clip angles, slotted holes, and splices between different sizes.
-- More is listed in [What is not built yet](topic:not-built-yet).
+- Angles with unequal legs are not in the catalog; an angle's two legs are drawn alike.
+- S shapes, C and UPN channels are drawn with parallel flanges of the average thickness, not sloped flanges.
+- In a live session, grids, levels and phases travel whole (the later change wins), and DetailCraft shows no other people's cursors or "is editing" labels yet.
+- Still from 0.4: shop drawings of channels, angles and tubes; weld symbols other than fillets; portrait sheets, A0 and custom sizes; clip angles, slotted holes, and skewed or sloped end plates; straight stairs only.
+- [Not built yet](topic:not-built-yet)

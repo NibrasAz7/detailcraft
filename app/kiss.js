@@ -59,13 +59,13 @@ export function kissShape(profile, metric) {
     return ['PL', metric ? f2c(t) + 'X' + f2c(w) : inchFraction(t / IN) + 'X' + inchFraction(w / IN)];
   }
   if (p.source === 'aisc') {
-    const m = name.match(/^(W|C|L|HSS)(.*)$/);
+    const m = name.match(/^(W|S|C|L|HSS)(.*)$/);
     if (m) {
       if (m[1] === 'HSS') { const parts = m[2].split('X'); parts[parts.length - 1] = decWall(parts[parts.length - 1]); return ['HSS', parts.join('X')]; }
       return [m[1], m[2]];
     }
   }
-  if (p.source === 'en') return ['W', name];
+  if (p.source === 'en') return [p.kind === 'C' ? 'C' : 'W', name];   // UPN is a channel
   return [{ I: 'MI', C: 'MI', L: 'MI', RHS: 'MI', CHS: 'MI' }[p.kind] || 'MI', name];
 }
 const f2c = (v) => String(Math.round(v * 100) / 100);

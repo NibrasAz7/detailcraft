@@ -88,6 +88,7 @@ $__tools = [
                 <button type="button" role="menuitem" data-act="paste"><?= Lang::e('page.edit.paste') ?> <kbd>Ctrl+V</kbd></button>
                 <button type="button" role="menuitem" data-act="paste-in-place"><?= Lang::e('page.edit.paste-in-place') ?> <kbd>Ctrl+Shift+V</kbd></button>
                 <button type="button" role="menuitem" data-act="duplicate"><?= Lang::e('page.edit.duplicate') ?> <kbd>Ctrl+D</kbd></button>
+                <button type="button" role="menuitem" data-act="move"><?= Lang::e('page.edit.move') ?> <kbd>M</kbd></button>
                 <button type="button" role="menuitem" data-act="delete"><?= Lang::e('page.edit.delete') ?> <kbd>Delete</kbd></button>
                 <hr>
                 <button type="button" role="menuitem" data-act="select-all"><?= Lang::e('page.edit.select-all') ?> <kbd>Ctrl+A</kbd></button>

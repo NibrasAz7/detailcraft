@@ -368,6 +368,7 @@ async function start(root) {
       case 'paste': return startPaste(false);
       case 'paste-in-place': return startPaste(true);
       case 'duplicate': return duplicate();
+      case 'move': return setTool('move');   // the M key's command (Edit › More), so menu styles can place and remap it
       case 'select-all': return selectAll();
       case 'select-none': { const had = selected().length; setSelection([]); print(tr(had ? 'app.sel.none.done' : 'app.sel.none.already')); return; }
       case 'ifc': return exportIfc();
@@ -393,6 +394,7 @@ async function start(root) {
     setEdit('copy', copyable, tr('app.bar.copy'), needCopy);
     setEdit('cut', copyable, tr('app.bar.cut'), needCopy);
     setEdit('duplicate', copyable, tr('app.bar.duplicate'), needCopy);
+    setEdit('move', copyable, tr('app.bar.move'), needCopy);
     setEdit('delete', picked.length > 0, tr('app.bar.delete'), tr('app.bar.delete.why'));
     const canPaste = !!clip || clipStored();
     setEdit('paste', canPaste, tr('app.bar.paste'), tr('app.bar.paste.why'));
@@ -1947,7 +1949,11 @@ async function start(root) {
     get viewCube() { return viewCube; }, get axisIcon() { return axisIcon; }, cubeView: () => cubeOpts?.getView(),
     setTool, select, setSelection, setView, act, nodeScreen: (p) => view?.toScreen(p),
     drawings: () => makeDrawings(), get openDrawingSet() { return dwgSet; },
+    print: (m) => print(m),   // Studio Live (0.5 LV.22, live.js): its messages
   };
+  // the menu styles (0.5 IP.3, input-detailcraft.js + the shell's app-input-ui.js): their messages go to the status line, and
+  // letters stay DetailCraft's while a placement or a paste is under way
+  window.ccInputHooks = { status: (text) => print(text || ''), busy: () => !!pending || tool === 'paste' || tool === 'move' };
 
   // ---- autosave and crash recovery (0.4 1.2): the open model is the document ----
   const autosave = new Autosave({ app: 'detailcraft' });
@@ -1978,6 +1984,8 @@ async function start(root) {
   print(tr('app.status.ready'));
   // desktop: the file the app was started with (double-click, "Open with")
   fileHost.launchFiles().then((files) => { if (files?.[0]) openFile(files[0]); }).catch(() => {});
+  // Studio Live from a link (#live=<code> on a host's LAN page, ?live=<ROOM>#<secret> from an invite): join; the model comes from the host
+  if (/[#&]live=|[?&]live=/.test(location.hash + location.search)) import('./live.js').then((m) => m.joinFromPage(window.detailcraft, fileHost), (err) => print(err.message));
   // another app handed a file over ("Open in DetailCraft" in BimCraft: ?handoff=<id>, 0.4 1.5 / handoff.js): open it as if dropped
   const hid = handoffParam(location.search);
   if (hid) {

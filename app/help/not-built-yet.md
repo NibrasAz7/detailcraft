@@ -76,12 +76,12 @@ DetailCraft builds five connections: a brace gusset (see [Brace gussets](topic:b
 | Not yet | Instead, today |
 |---|---|
 | Cloud saving and sync between computers | Save `.detailcraft.json` files and share them like any file. Cloud saving is not available yet |
-| Several people in one model | One person per file |
-| Desktop builds | Use DetailCraft in a browser; desktop builds are not available yet |
+| Other people's cursors and "is editing" labels in a live session; grids, levels and phases merged item by item | Edits still merge (grids, levels and phases go whole, the later change wins); see [Detail one structure together, live](topic:work-live) |
+| Invite links to a live session over the internet | Join with a short code on the same network |
 
 ## Platforms
 
-- DetailCraft is laid out for a desktop or laptop screen. On a tablet or phone, touch works for looking, selecting and placing, but the panels are crowded.
+- DetailCraft is made for a desktop, laptop or tablet screen. It works on a phone too: the model keeps the screen and the panels and reports open as sheets from a bar at the bottom, but there is little room for the panels.
 - Offline use needs DetailCraft saved for offline use first, with {{ui:Save for offline}} in the app bar; once it reads {{ui:Offline ready}}, everything in this build works with no connection. See [Working offline](common:offline).
 
 If one of these gaps blocks your work, tell us through the [support page](https://getcadcraft.com/support); it helps us decide what to build next.

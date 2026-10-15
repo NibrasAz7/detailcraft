@@ -72,20 +72,29 @@ function tool(bin, file, extra = []) {
 section('Profiles');
 {
   const cat = [...Pr.CATALOG.values()];
-  ok(cat.length === 45, 'catalog has 45 cited sizes', String(cat.length));
+  // the shared section table (lib/shapes/sections.js, 0.5 MQ.3): 1,259 sizes here (every family but unequal-leg angles)
+  ok(cat.length === 1259, 'catalog has 1,259 cited sizes from the shared section table', String(cat.length));
+  const legacy = ['W8x10', 'W10x49', 'W24x55', 'C12x20.7', 'L6x6x1/2', 'HSS8x8x1/2', 'HSS4.500x0.237', 'HSS6.625x0.280', 'IPE100', 'HEA300', 'HEB300'];
+  ok(legacy.every((n) => Pr.isLegacyName(n) && Pr.CATALOG.get(n.toUpperCase())?.name === n), 'the 0.4 catalog names are all there, named as before');
+  const w49 = Pr.getProfile('W10x49'), h45 = Pr.getProfile('HSS4.500x0.237');
+  ok(near(w49.d, 9.98 * 25.4) && near(h45.massPub, 10.79 * 1.48816394) && near(Pr.getProfile('HSS6.625x0.280').D, 6.625 * 25.4), 'the three rows whose database value is rounded keep their 0.4 values (W10x49 d 9.98, HSS4.500x0.237 10.79 lb/ft, OD 6.625)');
+  // families drawn with parallel flanges / square corners, and the Pipe rows whose published area the database rounds
+  const famTol = { S: 0.02, UPN: 0.015, Pipe: 0.035, W: 0.008 };
+  const ODD = new Set(['C3x3.5']);   // its nominal weight and area run 6% and 1.6% apart in the database itself
   const IN2 = 645.16, LBFT_PER_IN2 = 490 / 144;            // steel at 490 lb/ft³: lb/ft per in² of area
   for (const p0 of cat) {
     const p = Pr.getProfile(p0.name);
     const ex = Pr.exactArea(p);
-    const tolA = { I: 0.004, C: 0.015, L: 0.015, RHS: 0.005, CHS: 0.01 }[p.kind];
-    ok(Math.abs(ex / p.areaPub - 1) <= tolA, p.name + ': area from dimensions matches the published area', (ex / 100).toFixed(2) + ' vs ' + (p.areaPub / 100).toFixed(2) + ' cm²');
-    if (p.source === 'en') ok(near(ex / 100 * 0.785, p.massPub, 0.051), p.name + ': EN mass = A × 7850 kg/m³ (to its 0.1 kg/m)', p.massPub + ' vs ' + (ex / 100 * 0.785).toFixed(2));
+    const tolA = famTol[p.family] ?? { I: 0.004, C: 0.015, L: 0.015, RHS: 0.008, CHS: 0.01 }[p.kind];
+    ok(Math.abs(ex / p.areaPub - 1) <= (ODD.has(p.name) ? 0.02 : tolA), p.name + ': area from dimensions matches the published area', (ex / 100).toFixed(2) + ' vs ' + (p.areaPub / 100).toFixed(2) + ' cm²');
+    if (p.source === 'en' && p.kind === 'I') ok(near(ex / 100 * 0.785, p.massPub, 0.051), p.name + ': EN mass = A × 7850 kg/m³ (to its 0.1 kg/m)', p.massPub + ' vs ' + (ex / 100 * 0.785).toFixed(2));
+    else if (p.source === 'en') ok(near(p.pub.A * 0.785, p.massPub, 0.1), p.name + ': EN mass = published A × 7850 kg/m³ (both rounded)', p.massPub + ' vs ' + (p.pub.A * 0.785).toFixed(2));
     else if (p.kind === 'RHS' || p.kind === 'CHS') {
       // AISC HSS weights use the NOMINAL wall; areas the design wall (0.93 t)
       const nomArea = p.kind === 'RHS' ? 2 * p.pub.tNom * (p.pub.H + p.pub.B - 2 * p.pub.tNom) - (4 - Math.PI) * ((2 * p.pub.tNom) ** 2 - p.pub.tNom ** 2) : Math.PI * (p.pub.D - p.pub.tNom) * p.pub.tNom;
       ok(Math.abs(p.pub.W / (nomArea * LBFT_PER_IN2) - 1) < 0.005, p.name + ': weight = nominal-wall area × 490 lb/ft³', p.pub.W + ' vs ' + (nomArea * LBFT_PER_IN2).toFixed(2));
-      ok(near(p.pub.t, Math.round(p.pub.tNom * 0.93 * 1000) / 1000, 0.0015), p.name + ': design wall = 0.93 × nominal');
-    } else ok(Math.abs(p.pub.W / (p.pub.A * LBFT_PER_IN2) - 1) < 0.025, p.name + ': nominal weight ≈ A × 490 lb/ft³', (p.pub.W / (p.pub.A * LBFT_PER_IN2)).toFixed(3));
+      ok(near(p.pub.t, Math.round(p.pub.tNom * 0.93 * 1000) / 1000, p.family === 'Pipe' ? 0.0025 : 0.0015), p.name + ': design wall = 0.93 × nominal');
+    } else ok(Math.abs(p.pub.W / (p.pub.A * LBFT_PER_IN2) - 1) < (ODD.has(p.name) ? 0.06 : 0.025), p.name + ': nominal weight ≈ A × 490 lb/ft³', (p.pub.W / (p.pub.A * LBFT_PER_IN2)).toFixed(3));
     const outer = p.loops[0];
     ok(Pr.shoelace(outer) > 0, p.name + ': outer loop counter-clockwise');
     const net = p.loops.reduce((s, l) => s + Pr.shoelace(l), 0);
@@ -100,6 +109,12 @@ section('Profiles');
   ok(pl && pl.kind === 'PL' && pl.t === 20 && pl.b === 200 && near(pl.mass, 0.02 * 0.2 * 7850), 'PL20x200: parametric plate, mass from area × 7850');
   ok(Pr.getProfile('PL0x200') === null && Pr.getProfile('W99x1') === null && Pr.getProfile(42) === null, 'unknown sizes resolve to null');
   ok(!Pr.cleanCustom({ name: 'W12x26', kind: 'I', d: 1, bf: 1, tw: 1, tf: 1, r: 0 }).ok, 'a custom profile cannot take a catalog name');
+  {
+    // a model saved before W12x35 joined the catalog, with a custom profile of that name: it opens, and its own profile wins
+    const old = Pr.cleanCustom({ name: 'W12x35', kind: 'I', d: 300, bf: 150, tw: 8, tf: 12, r: 0 }, { saved: true });
+    ok(old.ok && Pr.getProfile('W12x35', [old.profile]).d === 300 && Pr.getProfile('W12x35').d > 300, 'a saved custom profile named like a newer catalog size opens and wins in its model; elsewhere the name is the catalog size');
+    ok(!Pr.cleanCustom({ name: 'W12x35', kind: 'I', d: 300, bf: 150, tw: 8, tf: 12, r: 0 }).ok && !Pr.cleanCustom({ name: 'W12x26', kind: 'I', d: 300, bf: 150, tw: 8, tf: 12, r: 0 }, { saved: true }).ok, 'new custom profiles still cannot take a catalog name, and a saved one cannot take a 0.4 catalog name');
+  }
   ok(!Pr.cleanCustom({ name: 'X', kind: 'I', d: 100, bf: 50, tw: 60, tf: 5, r: 0 }).ok, 'custom I: web wider than flange refused');
   const cu = Pr.cleanCustom({ name: 'Built-up 600', kind: 'I', d: 600, bf: 250, tw: 10, tf: 20, r: 0 });
   ok(cu.ok && near(Pr.getProfile('Built-up 600', [cu.profile]).area, 2 * 250 * 20 + 560 * 10), 'custom welded I: area from its plates');

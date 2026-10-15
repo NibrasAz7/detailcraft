@@ -493,7 +493,7 @@ export function readModel(text) {
   const lv = (Array.isArray(j.levels) ? j.levels : []).slice(0, 200).map((l) => ({ name: cleanText(l?.name, 40), z: Number(l?.z) })).filter((l) => l.name && Number.isFinite(l.z));
   s.levels = lv.length ? lv.sort((a, b) => a.z - b.z) : s.levels;
   for (const p of (Array.isArray(j.profiles) ? j.profiles : []).slice(0, 500)) {
-    const r = cleanCustom(p);
+    const r = cleanCustom(p, { saved: true });
     if (r.ok && !s.profiles.some((x) => x.name.toUpperCase() === r.profile.name.toUpperCase())) s.profiles.push(r.profile); else warnings.push(t('model.warn.profile'));
   }
   const ids = new Set();

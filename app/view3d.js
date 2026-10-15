@@ -38,6 +38,7 @@ import { nodes as gridNodes } from './model.js';
 import { barPolyline, BARS } from './rebar.js';
 import { lassoMode, nextMode, thin } from './lasso-core.js';
 import { snapOffset } from './transform.js';
+import { onMouse, panButton } from './input-mouse.js';   // 0.5 IP.3: the menu style's wheel and buttons (input-detailcraft.js)
 
 const MM = 0.001;
 const SNAP_PX = 18, SNAP_TOUCH = 34, TAP_PX = 5, TAP_TOUCH = 12, LONG_MS = 550;
@@ -77,7 +78,20 @@ export class View3D {
     this.hoverNode = null;
     this.pickables = [];
     this.box = new THREE.Box3();
+    this._mouse = null;
     this.makeControls();
+    // the menu style's mouse (Settings › DetailCraft › Menus, keys and mouse): which buttons pan the plan and elevations,
+    // what each button does in 3D, the wheel's direction and speed (0.5 IP.3)
+    onMouse((m) => { this._mouse = m; this.applyMouse(); });
+    // the wheel turned round: a copy of the event with the other sign (a pinch, ctrl+wheel, is never turned round)
+    canvas.addEventListener('wheel', (e) => {
+      if (!this._mouse || this._mouse.wheel !== -1 || e.ctrlKey || e.ccFlipped) return;
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      const f = new WheelEvent('wheel', { deltaX: e.deltaX, deltaY: -e.deltaY, deltaZ: e.deltaZ, deltaMode: e.deltaMode, clientX: e.clientX, clientY: e.clientY, screenX: e.screenX, screenY: e.screenY, shiftKey: e.shiftKey, altKey: e.altKey, metaKey: e.metaKey, bubbles: true, cancelable: true });
+      f.ccFlipped = true;
+      canvas.dispatchEvent(f);
+    }, { capture: true, passive: false });
     this.applyTheme();
     new MutationObserver(() => { this.applyTheme(); if (this.state) this.setModel(this.state, this.built, this.marks); })
       .observe(document.documentElement, { attributes: true, attributeFilter: ['data-space'] });
@@ -115,7 +129,23 @@ export class View3D {
       this.controls.mouseButtons = { LEFT: this._boxSelect ? null : THREE.MOUSE.PAN, MIDDLE: this._boxSelect ? THREE.MOUSE.PAN : THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
       this.controls.touches = { ONE: THREE.TOUCH.PAN, TWO: THREE.TOUCH.DOLLY_PAN };
     }
+    this.applyMouse();
     this.controls.addEventListener('change', () => { this.render(); this.updateHover(); });
+  }
+  /** The menu style's mouse on the controls (0.5 IP.3). Without a style (or with DetailCraft's own) nothing changes. */
+  applyMouse() {
+    const m = this._mouse, c = this.controls;
+    if (!m || !c) return;
+    c.zoomSpeed = m.zoomSpeed;
+    if (this.camera.isOrthographicCamera) {
+      // plan and elevations: the middle and right buttons pan only where the style says so (the left keeps the selection window)
+      const b = c.mouseButtons;
+      c.mouseButtons = { LEFT: b.LEFT, MIDDLE: this._boxSelect ? (panButton(1) ? THREE.MOUSE.PAN : null) : b.MIDDLE, RIGHT: panButton(2) ? THREE.MOUSE.PAN : null };
+    } else {
+      const ACT = { orbit: THREE.MOUSE.ROTATE, pan: THREE.MOUSE.PAN, zoom: THREE.MOUSE.DOLLY, none: null };
+      const o = m.orbit3d;
+      c.mouseButtons = o ? { LEFT: ACT[o.left], MIDDLE: ACT[o.middle], RIGHT: ACT[o.right] } : { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
+    }
   }
 
   applyTheme() {

@@ -8,6 +8,10 @@ keywords: switching, migrate, familiar, workflow, comparison, differences, numbe
 
 If you detail in Tekla Structures, most of DetailCraft will look familiar: grids, levels, profiles from a catalog, parts and assemblies, connections, numbering, NC files, IFC. The scale is very different: Tekla Structures is a full production system, and DetailCraft is a small, early browser app that does a few jobs end to end. This page tells you where your habits carry over and where they do not.
 
+:::tip
+If your hands know the ribbon of Tekla Structures, pick the {{ui:Steel ribbon}} menu style in {{ui:Settings}} › {{ui:DetailCraft}} › {{ui:Menus, keys and mouse}}: Modeling, Detailing, Edit, Drawings, Fabrication and View tabs, and the middle button pans. If you come from AutoCAD and like to type commands, {{ui:Drafting classic}} adds a command line (BEAM, COLUMN, ENDPLATE, ZOOM …). See [Menus, keys and mouse](topic:menus-keys-and-mouse).
+:::
+
 ## Quick map
 
 | You are used to | In DetailCraft |
@@ -18,7 +22,7 @@ If you detail in Tekla Structures, most of DetailCraft will look familiar: grids
 | The column, beam and plate commands | {{ui:Column}} ({{key:C}}), {{ui:Beam}} ({{key:B}}), {{ui:Brace}} ({{key:R}}), {{ui:Plate}} ({{key:P}}), {{ui:Footing}} ({{key:F}}) |
 | Part properties dialog (double-click a part) | Click once: the {{ui:Properties}} panel on the right is always live; there is no dialog and no Modify or Apply button |
 | Position on plane, rotation and depth settings | {{ui:Position}} (top of steel, centered or bottom on the line) and {{ui:Rotation (°)}}. No separate horizontal offsets |
-| The profile catalog | A fixed list of 45 published sizes (AISC W, C, L, HSS; European IPE, HEA, HEB), plus parametric plates and your own {{ui:Custom profile}} sections |
+| The profile catalog | A fixed list of 1,259 published sizes (AISC W, S, C, L, HSS, Pipe; European IPE, HEA, HEB, UPN), plus parametric plates and your own {{ui:Custom profile}} sections |
 | Material catalog | Seven grades in a list: A992, A36, A572 Gr 50, A500 Gr C, S235, S275, S355 |
 | Applying a connection component and its dialog | Select the beam, choose {{ui:End plates}}. The settings appear in the {{ui:Properties}} panel. Only two connections exist (end plate to column flange, base plate) |
 | Auto-connection, or copying a joint to similar joints | Select a connection, choose {{ui:Apply to similar (n)}} |

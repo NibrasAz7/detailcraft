@@ -344,7 +344,7 @@ try {
   });
   ok(tb.kids.join(',') === 'undo,redo,copy,paste,more', 'Edit group: Undo, Redo, Copy, Paste, More (tools are children of the tool row)', tb.kids.join(','));
   ok(tb.groups.join(',') === 'File,Place,Connect,Edit,Output', 'toolbar groups File, Place, Connect, Edit, Output', tb.groups.join(','));
-  ok(tb.menu.join(' ') === 'cut|Ctrl+X copy|Ctrl+C paste|Ctrl+V paste-in-place|Ctrl+Shift+V duplicate|Ctrl+D delete|Delete select-all|Ctrl+A select-none|Esc', 'More menu: every item with its key', tb.menu.join(' '));
+  ok(tb.menu.join(' ') === 'cut|Ctrl+X copy|Ctrl+C paste|Ctrl+V paste-in-place|Ctrl+Shift+V duplicate|Ctrl+D move|M delete|Delete select-all|Ctrl+A select-none|Esc', 'More menu: every item with its key', tb.menu.join(' '));
   ok(tb.rows <= 2 && tb.h < 150, 'toolbar at 1440 px: ' + tb.rows + ' row(s), ' + tb.h + ' px tall');
   const copyBtn = page.locator('.dc-tool-row > [data-act="copy"]');
   ok(await copyBtn.isDisabled() && /select members or footings first/.test(await copyBtn.getAttribute('title')), 'nothing selected: Copy is disabled and its title says why');
