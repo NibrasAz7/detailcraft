@@ -53,6 +53,9 @@ Select several members. Under **Change on all of them** in the {{ui:Properties}}
 
 A field shows **Varies** when the members do not agree. Pick or type a value and every member it applies to takes it; the status bar says how many changed and how many kept their own.
 
+Number fields in the {{ui:Properties}} panel also take a calculation: `2*450`, `4500/3`, `(1200-2*25)/2`, `6-1/2`. A
+calculation that cannot be read is refused, and the status bar says where it went wrong.
+
 ## Move, rotate or mirror
 
 Select members and footings (a single one works too), then use **Move, rotate, mirror** in the {{ui:Properties}} panel. Connections are not moved on their own: they follow their members. If you move a beam but not its column, the status bar says how many connections now join a moved member to one that stayed, and [Problems](topic:troubleshooting) says if they no longer fit.

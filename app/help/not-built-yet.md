@@ -42,6 +42,15 @@ DetailCraft builds five connections: a brace gusset (see [Brace gussets](topic:b
 | Connection design checks (strength) | Check connections with your engineer's calculations; DetailCraft only warns about edge distance and spacing |
 | Slotted holes | Round holes only |
 
+## Analysis
+
+| Not yet | Instead, today |
+|---|---|
+| Design code checks (member sizes, capacities, connections) | The {{ui:Analysis}} tab gives forces, reactions and deflections; an engineer checks them against the code; see [Analyse the frame](topic:frame-analysis) |
+| Second-order (P-Δ) analysis, buckling, vibration, earthquake | First-order linear analysis only |
+| Floor, wind and snow loads made for you from areas | Put loads on members by hand, in kN/m or kN |
+| Member offsets, eccentric joints, tension-only braces, plates and footings in the frame | Members are analysed on their work lines; braces carry tension and compression |
+
 ## Rebar
 
 | Not yet | Instead, today |

@@ -209,6 +209,7 @@ $__tools = [
       <button type="button" role="tab" class="dc-tab" aria-selected="false" aria-controls="dc-rep" data-tab="phases" tabindex="-1"><?= Lang::e('rep.tab') ?></button>
       <button type="button" role="tab" class="dc-tab" aria-selected="false" aria-controls="dc-rep" data-tab="nest" tabindex="-1"><?= Lang::e('nest.tab') ?></button>
       <button type="button" role="tab" class="dc-tab" aria-selected="false" aria-controls="dc-rep" data-tab="clashes" tabindex="-1"><?= Lang::e('clash.tab') ?> <span data-count-clashes></span></button>
+      <button type="button" role="tab" class="dc-tab" aria-selected="false" aria-controls="dc-rep" data-tab="analysis" tabindex="-1"><?= Lang::e('frame.ui.tab') ?></button>
     </div>
     <div class="dc-rep" id="dc-rep" role="tabpanel" tabindex="0" data-report></div>
   </section>

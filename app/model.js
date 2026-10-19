@@ -36,6 +36,7 @@ import { getProfile, cleanCustom } from './profiles.js';
 import { BASEPLATE_DEFAULTS, isBeamEnd, DEFAULTS_OF, membersOf, mainOf } from './connections.js';
 import { FOOTING_DEFAULTS, cleanFooting } from './rebar.js';
 import { STAIR_DEFAULTS, cleanStair } from './stair.js';
+import { cleanAnalysis } from './analysis.js';
 import { t } from './i18n.js';
 
 export const FORMAT = 'detailcraft';
@@ -553,6 +554,8 @@ export function readModel(text) {
   s.phases = withUsedPhases(ph.length ? ph : [{ n: 1, name: '' }], s);
   s.numbering = { perPhase: j.numbering?.perPhase !== false };
   s.issues = (Array.isArray(j.issues) ? j.issues : []).slice(0, 20000).map(cleanIssue).filter(Boolean);
+  const an = cleanAnalysis(j.analysis);   // 0.6 LC.4: frame analysis settings and loads (optional; analysis.js)
+  if (an) s.analysis = an;
   let maxSeq = 0;
   for (const id of ids) maxSeq = Math.max(maxSeq, Number(id.slice(1)) || 0);
   s.seq = Math.max(Number(j.seq) || 1, maxSeq + 1);

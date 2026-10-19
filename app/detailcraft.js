@@ -57,9 +57,11 @@ import { importIfc, reportLines } from './ifc-import.js';
 import { copyClip, readClip, pasteInto, clipSegments, overlaps, CLIP_KEY } from './clipboard.js';
 import { mountViewCube, mountAxisIcon } from './viewcube.js';
 import { t as tr, has as hasKey } from './i18n.js';   // t() of the language files, named tr here: t is a common local name in this file
+import { readNum } from './numtext.js';   // 0.6 DF.3: arithmetic in number boxes
 import { moveXf, rotateXf, mirrorXf, transformRefs, ghostLines, selectionCenter, manyPatchable, applyToMany } from './transform.js';
 import { selectionItems, windowSelect } from './winsel.js';
 import { threeCubeOptions } from './viewcube-three.js';
+import { mountAnalysis } from './analysis-ui.js';   // 0.6 LC.4: the Analysis tab (frame analysis, an aid, not a code check)
 
 const root = document.querySelector('[data-detailcraft]');
 if (root) start(root);
@@ -101,6 +103,7 @@ async function start(root) {
   let pending = null;                  // first node of a two-point placement
   let viewMode = '3d';
   let reportTab = 'problems';
+  let analysis = null;                 // the Analysis tab (0.6 LC.4, analysis-ui.js), mounted with the reports below
   const opts = {
     beam: { ...defaultsFor('beam') }, column: { ...defaultsFor('column'), to: '' }, brace: { ...defaultsFor('brace') },
     plate: { t: 20, w: 200, material: 'A36', position: 'middle', rotation: 0 },
@@ -304,6 +307,7 @@ async function start(root) {
     renderLeft();
     // while someone is typing or tabbing in the properties panel, redraw it once focus has settled
     if (ui.props.contains(ui.props.ownerDocument.activeElement)) setTimeout(renderProps, 0); else renderProps();   // ownerDocument: the panel may be in the panels window
+    analysis?.modelChanged();
     renderReport();
     renderBar();
     ui.hint.hidden = model.state.members.length > 0 || model.state.footings.length > 0;
@@ -401,6 +405,12 @@ async function start(root) {
     setEdit('paste-in-place', canPaste, tr('app.bar.paste-in-place'), tr('app.bar.paste.why'));
     const any = model.state.members.length + model.state.footings.length > 0;
     setEdit('select-all', any, tr('app.bar.select-all'), tr('app.bar.select-all.why'));
+    const st = model.state, content = any || st.stairs.length + st.connections.length > 0;
+    for (const b of ui.tools.querySelectorAll('[data-act]')) {
+      const a = b.dataset.act;
+      if (a === 'new') b.disabled = !content && !model.dirty;
+      else if (['save', 'ifc', 'nc', 'bom', 'bending', 'drawings', 'kiss', 'fit'].includes(a)) b.disabled = !content;
+    }
     setEdit('select-none', picked.length > 0, tr('app.bar.select-none'), tr('app.bar.select-none.why'));
     btn('endplates').disabled = !(sel?.kind === 'member' && model.member(sel.id)?.type === 'beam');
     btn('baseplate').disabled = !(sel?.kind === 'member' && model.member(sel.id)?.type === 'column');
@@ -543,6 +553,7 @@ async function start(root) {
     view?.setSelection(selected());
     renderProps();
     renderBar();
+    if (reportTab === 'analysis') renderReport();   // 0.6 LC.4: the Analysis tab loads the selected members
   }
   /** A click in the view: plain = select that; Shift/Ctrl/Cmd = add it or take it away. */
   function pick(ref, e) {
@@ -899,9 +910,16 @@ async function start(root) {
   let fid = 0;
   /** A labeled field row pair for a .dc-props grid. */
   function field(label, input) { if (!input.id) input.id = 'dc-f' + (++fid); return [el('label', { for: input.id }, label), input]; }
+  // a number box reads arithmetic too (0.6 DF.3, numtext.js: 2*450, 4500/3): a text box, refusals say where they went wrong
   function numIn(value, onSet, o = {}) {
-    const i = el('input', { type: 'number', className: 'dc-input', value: String(Math.round(value * 1000) / 1000), step: o.step || 'any', min: o.min, max: o.max, id: o.id });
-    i.addEventListener('change', () => { const v = Number(i.value); if (i.value === '' || !Number.isFinite(v)) { i.setAttribute('aria-invalid', 'true'); print(tr('app.num.bad')); return; } onSet(v); });
+    const i = el('input', { type: 'text', className: 'dc-input dc-num', value: String(Math.round(value * 1000) / 1000), id: o.id, autocomplete: 'off', spellcheck: false });
+    i.addEventListener('change', () => {
+      if (i.value.trim() === '') { i.setAttribute('aria-invalid', 'true'); print(tr('app.num.bad')); return; }
+      const r = readNum(i.value);
+      if (!r.ok) { i.setAttribute('aria-invalid', 'true'); print(tr('calc.err.' + r.code, { pos: r.pos + 1, text: r.text })); return; }
+      i.removeAttribute('aria-invalid');
+      onSet(r.value);
+    });
     return i;
   }
   function textIn(value, onSet, o = {}) {
@@ -1399,6 +1417,7 @@ async function start(root) {
   }
 
   // ---- reports ----
+  analysis = mountAnalysis({ getModel: () => model, getView: () => view, edit, selected, select, print, download: (n, d, ty) => download(n, d, ty), safeName: () => safeName(), rerender: () => renderReport() });
   root.querySelector('.dc-tabs').addEventListener('click', (e) => { const t = e.target.closest('[data-tab]'); if (t) { reportTab = t.dataset.tab; renderReport(); } });
   root.querySelector('.dc-tabs').addEventListener('keydown', (e) => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
@@ -1427,6 +1446,8 @@ async function start(root) {
       out.push(...clashPanel());
     } else if (reportTab === 'nest') {
       out.push(...nestPanel());
+    } else if (reportTab === 'analysis') {
+      out.push(...(analysis ? analysis.panel() : []));
     } else if (reportTab === 'phases') {
       const T = reportTables(phaseReport(model.state, built, marks, schedule));
       out.push(el('div', { className: 'dc-rep-head' }, el('h3', {}, tr('rep.summary')),
@@ -1950,6 +1971,7 @@ async function start(root) {
     setTool, select, setSelection, setView, act, nodeScreen: (p) => view?.toScreen(p),
     drawings: () => makeDrawings(), get openDrawingSet() { return dwgSet; },
     print: (m) => print(m),   // Studio Live (0.5 LV.22, live.js): its messages
+    get analysis() { return analysis; },   // 0.6 LC.4 (tests)
   };
   // the menu styles (0.5 IP.3, input-detailcraft.js + the shell's app-input-ui.js): their messages go to the status line, and
   // letters stay DetailCraft's while a placement or a paste is under way
